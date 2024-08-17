@@ -1,0 +1,35 @@
+---
+title: 'Activity Indicator'
+description: 'Activity Indicator component'
+icon: 'loader'
+---
+
+<Tip>
+    The `ActivityIndicator` component is used to show a loading indicator. It is a wrapper around the native `ActivityIndicator` component. You can find it in the `/components` folder.
+</Tip>
+
+You can use the `ActivityIndicator` component in your code like this:
+
+```jsx ActivityIndicator.js
+import LoadingIndicator from '../../../components/ActivityIndicator';
+ 
+const [isLoading, setIsLoading] = useState(false);
+ 
+const fetchData = () => {
+	setIsLoading(true);
+	setTimeout(() => {
+		setIsLoading(false);
+	}, 3000);  // Simulate a fetch call
+};
+ 
+useEffect(() => {
+	fetchData();
+}, []);
+ 
+export default function activityindicator() {
+	return (
+		<LoadingIndicator isLoading={isLoading} />
+		<Button title="Reload Data" onPress={fetchData} />
+	)
+}
+```

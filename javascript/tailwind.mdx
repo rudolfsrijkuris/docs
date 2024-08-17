@@ -1,0 +1,73 @@
+---
+title: 'Tailwind CSS'
+description: 'Build beautiful mobile apps using Tailwind CSS'
+icon: 'brush'
+---
+
+<Note>
+    For styling ExpoShip uses Nativewind library which is wrapper for Tailwind CSS.
+</Note>
+
+## Theme
+To change theme colors for both dark mode and light mode open /color-theme.js file and there you can change primary, secondary, tertiary, accent. etc. colors.
+
+It looks like this:
+```js color-theme.js
+import { vars } from 'nativewind';
+ 
+export const themes = {
+	light: vars({
+		"--color-primary-default": "#2D3748",
+		"--color-primary-light": "#F7FAFC",
+		"--color-secondary-default": "#1B202D",
+		"--color-secondary-light": "#EDF2F7",
+		"--color-tertiary-default": "#3B485E",
+		"--color-tertiary-light": "#ffc2e6",
+		"--color-accent-default": "#6601FF",
+		"--color-accent-light": "#AAB2FF",
+		"--color-grey-default": "#979797",
+		"--color-slate-default": "#38383a",
+		"--color-dark-default": "#2D3748",
+		"--color-light-default": "#F7FAFC",
+		"--color-overlay": "rgba(0, 0, 0, .05)",
+	}),
+	
+	dark: vars({
+		"--color-primary-default": "#2D3748",
+		"--color-primary-light": "#F7FAFC",
+		"--color-secondary-default": "#1B202D",
+		"--color-secondary-light": "#EDF2F7",
+		"--color-tertiary-default": "#3B485E",
+		"--color-tertiary-light": "#ffc2e6",
+		"--color-accent-default": "#6601FF",
+		"--color-accent-light": "#AAB2FF",
+		"--color-grey-default": "#979797",
+		"--color-slate-default": "#38383a",
+		"--color-dark-default": "#2D3748",
+		"--color-light-default": "#F7FAFC",
+		"--color-overlay": "rgba(255, 255, 255, .05)"
+	}),
+}
+```
+
+## Dark mode support
+To support dark mode you need to add following lines to your screens:
+
+```js javascript
+import { ThemeContext } from '../../utility/ThemeContext';
+
+const { theme } = useContext(ThemeContext)
+
+const backgroundColor = theme === 'dark' ? 'bg-[--color-primary-default]' : 'bg-[--color-primary-light]';
+const textColor = theme === 'dark' ? 'text-[--color-primary-light]' : 'text-[--color-primary-default]';
+```
+
+And then you can style your components by adding `backgroundColor` or `textColor` variables, like this:
+
+```js javascript
+// Usually used for main View component
+className={`flex-1 justify-center items-center ${backgroundColor}`}
+ 
+// Used for any text component
+className={`font-bold text-center text-lg ${textColor}`}
+```

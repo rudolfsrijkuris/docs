@@ -1,0 +1,89 @@
+---
+title: 'Supabase'
+description: 'Follow this tutorial to set up user authentication with Supabase'
+icon: 'bolt'
+---
+
+## Set up Supabase
+
+1. Create a [Supabase account](https://supabase.com/dashboard/sign-up) or sign in to your existing one.
+2. In your Supabase dashboard, go to **"Project Settings"** then **"API Settings"**.
+3. Copy your **Supabase URL** and **Supabase Anon Key**.
+4. Paste these values into your `.env.local` file.
+
+```env .env.local
+SUPABASE_URL=your_supabase_url
+SUPABASE_ANON_KEY=your_supabase_anon_key
+```
+
+## Authentication & user data
+To set up authentication and user data, run the following SQL queries in your Supabase SQL editor. Execute them one after another:
+
+<CodeGroup>
+    ```sql Creating the table
+    create  table profiles (
+      id uuid references auth.users on delete cascade not  null  primary key,
+      updated_at timestamp with time zone,
+      username text unique,
+      full_name text,
+      avatar_url text,
+      website text,
+      constraint username_length check  (char_length(username)  >=  3)
+    );
+    ```
+
+    ```sql Row Level Security
+    alter table profiles
+      enable row level security;
+    
+    create policy "Public profiles are viewable by everyone." on profiles
+      for  select  using  (true);
+    
+    create policy "Users can insert their own profile." on profiles
+      for insert with  check  ((select auth.uid())  = id);
+      
+    create policy "Users can update own profile." on profiles
+      for update using  ((select auth.uid())  = id);
+    ```
+</CodeGroup> 
+
+## MagicLink
+To enable magic link login:
+
+- Go to **"Authentication"** then **"URL Configuration"**.
+- In Site URL paste this url `http://localhost:19006` and click **"Save"**.
+- Go to **"Redirect URLs"** section and click on **"Add URL"**.
+- Add this URL `[app.json_scheme_variable]://**`
+
+<Tip>
+  To find out what value you need to use, head to your projects app.json file and look at `"scheme": "..."` value. For example it could be like this `com.expoship://**`.
+</Tip>
+
+<Check>
+ Congrats - user authentication is now set up with Supabase and should be functional!
+</Check>
+
+## Other tutorials
+<Card
+  title="Set up development environment"
+  icon="screwdriver-wrench"
+  href="https://docs.expoship.dev/javascript/development-environment"
+>
+  Set up your development environment
+</Card>
+<CardGroup cols={2}>
+  <Card
+    title="Set up One Signal"
+    icon="bell"
+    href="https://docs.expoship.dev/javascript/onesignal"
+  >
+    Set up push notifications with One Signal
+  </Card>
+  <Card
+    title="Set up Revenue Cat"
+    icon="money-bill"
+    href="https://docs.expoship.dev/javascript/revenuecat"
+  >
+    Set up in-app purchases with Revenue Cat
+  </Card>
+</CardGroup>

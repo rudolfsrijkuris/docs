@@ -1,0 +1,35 @@
+---
+title: 'Button'
+description: 'Button component'
+icon: 'square-check'
+---
+
+## Button Types
+There are three types of **Button** components in ExpoShip codebase
+
+- **Primary Button**
+- **Outline Button**
+- **Ghost Button**
+
+<Tip>
+    You can find these buttons at `/components` folder.
+</Tip>
+
+## Usage
+You can use these buttons like this:
+
+```tsx Buttons.tsx
+import PrimaryButton from '@/components/PrimaryButton';
+import OutlineButton from '@/components/OutlineButton';
+import GhostButton from '@/components/GhostButton';
+ 
+const handlePress = () => alert('Button Pressed!');
+ 
+export default function button() {
+	return (
+		<PrimaryButton onPress={handlePress} title="Save" />
+		<OutlineButton onPress={handlePress} title="Edit" />
+		<GhostButton onPress={handlePress} title="Delete" />
+	)
+}
+```

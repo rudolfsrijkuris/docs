@@ -1,0 +1,160 @@
+---
+title: Get Started
+description: 'An overview of the ExpoShip JavaScript starter kit'
+icon: 'play'
+---
+
+<img
+  className="block dark:hidden"
+  src="/images/expoship-hero-ts.svg"
+  alt="Hero Light"
+/>
+<img
+  className="hidden dark:block"
+  src="/images/expoship-hero-ts.svg"
+  alt="Hero Dark"
+/>
+
+<Note>Follow the steps bellow to get the core application **up and running in under 5 minutes.** After that you can start activating other services or setting up any of the demo applications.</Note>
+
+## Quick setup
+
+**Hi there** 👋 - ready to build your mobile app? Let's get into it!
+
+<Steps>
+  <Step title="Clone the repository">
+    We'll start by getting your project up and running locally:
+
+    ```bash ExpoShip TypeScript version
+    git clone https://github.com/rudolfsrijkuris/expo-ship-ts.git [YOUR_APP_NAME]
+    cd [YOUR_APP_NAME]
+    git remote remove origin
+    ```
+  </Step>
+  <Step title="Environment variables">
+    Rename `.env.example` to `.env`
+
+    ```env .env
+    # Supabase
+    EXPO_PUBLIC_SUPABASE_URL=
+    EXPO_PUBLIC_SUPABASE_ANON_KEY=
+
+    # Revenue Cat
+    REVENUE_CAT_APPLE_KEY=
+    REVENUE_CAT_GOOGLE_KEY=
+
+    # One Signal
+    ONESIGNAL_APP_ID=
+    ```
+  </Step>
+  <Step title="Install dependencies and run">
+    We'll install all the required packages and run it locally:
+
+    ```bash cli
+    npm install
+    npx expo prebuild
+    npx expo run ios
+    # OR
+    npx expo run android
+    ```
+
+    <Check>
+      Open simulator - your app should be up and running!
+    </Check>
+  </Step>
+  <Step title="Customize app configuration">
+    Open `app.json`. It is where you configure your app. Each key is documented to know how and why it's used.
+
+    ```json app.json
+    {
+      "expo": {
+        "name": "[YOUR-APP-NAME]", // App's name
+        "slug": "[YOUR-APP-SLUG]", // App's slug
+        "version": "1.0.0",
+        "orientation": "portrait",
+        "icon": "./assets/images/icon.png", // Location to your app's icon
+        "scheme": "com.[YOUR-APP-NAME]", // This is used for supabase
+        "userInterfaceStyle": "automatic",
+        "splash": {
+          "image": "./assets/images/splash.png", // Location to your app's splash screen
+          "resizeMode": "contain",
+          "backgroundColor": "#ffffff"
+        },
+        "ios": {
+          "supportsTablet": true,
+          "bundleIdentifier": "com.[YOUR_APP_NAME].[YOUR_APP_NAME]app" // Your app's bundle identifier for iOS app
+        },
+        "android": {
+          "adaptiveIcon": {
+            "foregroundImage": "./assets/images/adaptive-icon.png", // Location to your app's adaptive icon
+            "backgroundColor": "#ffffff"
+          },
+          "permissions": [
+            "android.permission.RECORD_AUDIO"
+          ],
+          "package": "com.[YOUR_APP_NAME].[YOUR_APP_NAME]app" // Your app's package name for Android app
+        },
+        "web": {
+          "bundler": "metro",
+          "output": "static",
+          "favicon": "./assets/images/favicon.png"
+        },
+        "plugins": [
+          "expo-router",
+          [
+            "expo-image-picker",
+            {
+              "photosPermission": "The app needs access to your photos to set a profile picture."
+            }
+          ],
+          "expo-localization",
+          [
+            "onesignal-expo-plugin",
+            {
+              "mode": "development"
+            }
+          ]
+        ],
+        "experiments": {
+          "typedRoutes": true
+        }
+      }
+    }
+    ```
+  </Step>
+</Steps>
+
+After following these steps, the basic setup is done. You can now **start activating other services (auth, payments, notifications, ...)**
+
+## Quicklinks
+
+<CardGroup cols={2}>
+  <Card
+    title="Set up development environment"
+    icon="screwdriver-wrench"
+    href="https://docs.expoship.dev/typescript/development-environment"
+  >
+    Set up your development environment
+  </Card>
+  <Card
+    title="Set up Supabase"
+    icon="bolt"
+    href="https://docs.expoship.dev/typescript/supabase"
+  >
+    Set up user authentication with Supabase
+  </Card>
+  <Card
+    title="Set up One Signal"
+    icon="bell"
+    href="https://docs.expoship.dev/typescript/onesignal"
+  >
+    Set up push notifications with One Signal
+  </Card>
+  <Card
+    title="Set up Revenue Cat"
+    icon="money-bill"
+    href="https://docs.expoship.dev/typescript/revenuecat"
+  >
+    Set up in-app purchases with Revenue Cat
+  </Card>
+</CardGroup>

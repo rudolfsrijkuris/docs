@@ -1,0 +1,169 @@
+---
+title: Get Started
+description: 'An overview of the ExpoShip JavaScript starter kit'
+icon: 'play'
+---
+
+<img
+  className="block dark:hidden"
+  src="/images/expoship-hero-js.svg"
+  alt="Hero Light"
+/>
+<img
+  className="hidden dark:block"
+  src="/images/expoship-hero-js.svg"
+  alt="Hero Dark"
+/>
+
+<Note>Follow the steps bellow to get the core application **up and running in under 5 minutes.** After that you can start activating other services or setting up any of the demo applications.</Note>
+
+## Quick setup
+
+**Hi there** 👋 - ready to build your mobile app? Let's get into it!
+
+<Steps>
+  <Step title="Clone the repository">
+    We'll start by getting your project up and running locally:
+
+    ```bash ExpoShip JavaScript version
+    git clone https://github.com/rudolfsrijkuris/expo-ship.git [YOUR_APP_NAME]
+    cd [YOUR_APP_NAME]
+    git remote remove origin
+    ```
+  </Step>
+  <Step title="Environment variables">
+    Rename `.env.example` to `.env.local`
+
+    ```env .env.local
+    SUPABASE_URL=
+    SUPABASE_ANON_KEY=
+    
+    # REVENUE CAT
+    RC_IOS_KEY=
+    RC_ANDROID_KEY=
+    
+    # One Signal
+    ONESIGNAL_APP_ID=
+    
+    # Google Ads (all the id's are test id's)
+    BANNER_AD_UNIT_ID_IOS=ca-app-pub-3940256099942544/9214589741
+    BANNER_AD_UNIT_ID_ANDROID=ca-app-pub-3940256099942544/9214589741
+    
+    INTERSTITIAL_AD_UNIT_ID_IOS=ca-app-pub-3940256099942544/1033173712
+    INTERSTITIAL_AD_UNIT_ID_ANDROID=ca-app-pub-3940256099942544/1033173712
+    
+    REWARDED_INTERSTITIAL_AD_UNIT_ID_IOS=ca-app-pub-3940256099942544/5354046379
+    REWARDED_INTERSTITIAL_AD_UNIT_ID_ANDROID=ca-app-pub-3940256099942544/5354046379
+    ```
+  </Step>
+  <Step title="Install dependencies and run">
+    We'll install all the required packages and run it locally:
+
+    ```bash cli
+    npm install
+    npx expo prebuild
+    npx expo run ios
+    # OR
+    npx expo run android
+    ```
+
+    <Check>
+      Open simulator - your app should be up and running!
+    </Check>
+  </Step>
+  <Step title="Customize app configuration">
+    Open `app.json`. It is where you configure your app. Each key is documented to know how and why it's used.
+
+    ```json app.json
+    {
+      "expo": {
+        "name": "[YOUR_APP_NAME]", // App's name
+        "slug": "[YOUR_APP_NAME]", // App's name
+        "version": "1.0.0",
+        "orientation": "portrait",
+        "icon": "./assets/icons/expoship_icon.png", // Location to your apps icon
+        "userInterfaceStyle": "automatic",
+        "scheme": "com.[YOUR_APP_NAME]", // This is used for supabase auth
+        "assetBundlePatterns": [
+          "**/*"
+        ],
+        "ios": {
+          "supportsTablet": true,
+          "bundleIdentifier": "com.[YOUR_APP_NAME].[YOUR_APP_NAME]app" // Your bundle identifier for ios app
+        },
+        "android": {
+          "adaptiveIcon": {
+            "foregroundImage": "./assets/icons/expoship_icon.png", // Location to your apps icon
+            "backgroundColor": "#ffffff"
+          },
+          "package": "com.[YOUR_APP_NAME].[YOUR_APP_NAME]app" // Your bundle identifier for android app
+        },
+        "web": {
+          "favicon": "./assets/favicon.png"
+        },
+        "plugins": [
+          [
+            "expo-build-properties",
+            {
+              "ios": {
+                "useFrameworks": "static"
+              }
+            }
+          ],
+          "expo-router",
+          [
+            "onesignal-expo-plugin",
+            {
+              "mode": "development"
+            }
+          ]
+        ],
+        "extra": {
+          "router": {
+            "origin": false
+          }
+        },
+      },
+      "react-native-google-mobile-ads":  {
+        "ios_app_id":  "ca-app-pub-3940256099942544~1458002511",
+        "android_app_id":  "ca-app-pub-3940256099942544~3347511713"
+      }
+    }
+    ```
+  </Step>
+</Steps>
+
+After following these steps, the basic setup is done. You can now **start activating other services (auth, payments, notifications, ...)**
+
+## Quicklinks
+
+<CardGroup cols={2}>
+  <Card
+    title="Set up development environment"
+    icon="screwdriver-wrench"
+    href="https://docs.expoship.dev/javascript/development-environment"
+  >
+    Set up your development environment
+  </Card>
+  <Card
+    title="Set up Supabase"
+    icon="bolt"
+    href="https://docs.expoship.dev/javascript/supabase"
+  >
+    Set up user authentication with Supabase
+  </Card>
+  <Card
+    title="Set up One Signal"
+    icon="bell"
+    href="https://docs.expoship.dev/javascript/onesignal"
+  >
+    Set up push notifications with One Signal
+  </Card>
+  <Card
+    title="Set up Revenue Cat"
+    icon="money-bill"
+    href="https://docs.expoship.dev/javascript/revenuecat"
+  >
+    Set up in-app purchases with Revenue Cat
+  </Card>
+</CardGroup>

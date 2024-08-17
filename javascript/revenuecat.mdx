@@ -1,0 +1,66 @@
+---
+title: 'RevenueCat'
+description: 'Follow this tutorial to set up RevenueCat for in-app purchases'
+icon: 'money-bill'
+---
+
+<Note>
+    You can find the RevenueCat integration at `/utility/RevenueCatHandler.js` and it is initialized at `/app/_layout.js` like this:
+</Note>
+
+```javascript /app/_layout.js
+import { Stack } from "expo-router";
+import "../global.css";
+import { ThemeProvider } from "../utility/ThemeContext";
+import { RevenueCatHandler } from "../utility/RevenueCatHandler";
+ 
+const StackLayout = () => {
+ 
+return (
+  <RevenueCatHandler>
+    <ThemeProvider>
+      <Stack>
+        <Stack.Screen  name="(tabs)"  options={{ headerShown:  false, title:  'Back'  }}  />
+        <Stack.Screen  name="Auth/Login"  options={{ headerShown:  false  }}  />
+        <Stack.Screen  name="Auth/Signup"  options={{ headerShown:  false  }}  />
+        <Stack.Screen  name="Auth/MagicLink"  options={{ headerShown:  false  }}  />
+        <Stack.Screen  name="Onboarding"  options={{ headerShown:  false  }}  />
+        <Stack.Screen  name="Splashscreen"  options={{ headerShown:  false  }}  />
+        <Stack.Screen  name="Screens"  options={{ headerShown:  false  }}  />
+      </Stack>
+    </ThemeProvider>
+  </RevenueCatHandler>
+)}
+ 
+export default StackLayout
+```
+
+<Tip>
+    By default the `<RevenueCatHandler>` is disabled and commented out.
+    To setup RevenueCat we recommend to follow this [GalaxiesDev tutorial](https://galaxies.dev/in-app-purchases-react-native-revenuecat).
+</Tip>
+
+## Other tutorials
+<Card
+  title="Set up development environment"
+  icon="screwdriver-wrench"
+  href="https://docs.expoship.dev/javascript/development-environment"
+>
+  Set up your development environment
+</Card>
+<CardGroup cols={2}>
+  <Card
+    title="Set up Supabase"
+    icon="bolt"
+    href="https://docs.expoship.dev/javascript/supabase"
+  >
+    Set up user authentication with Supabase
+  </Card>
+  <Card
+    title="Set up One Signal"
+    icon="bell"
+    href="https://docs.expoship.dev/javascript/onesignal"
+  >
+    Set up push notifications with One Signal
+  </Card>
+</CardGroup>

@@ -1,0 +1,120 @@
+---
+title: 'One Signal'
+description: 'Follow this tutorial to set up push notifications with One Signal'
+icon: 'bell'
+---
+
+<Note>
+    You can find the OneSignal integration at `/utility/PushNotificationHandler.js` and it is initialized at `/app/Auth/Login/index.js` like this:
+</Note>
+
+```javascript Login/index.js
+useEffect(()  =>  {
+	PushNotificationHandler()
+},  [])
+```
+
+<Tip>
+    If you want to disable the Push Notifications just comment out this part of the code.
+</Tip>
+
+## Setting up OneSignal
+<Steps>
+    <Step title="Create an account">
+        Go to the [OneSignal website](https://onesignal.com/) and create an account.
+    </Step>
+    <Step title="Setting up Messaging Channels">
+        In your **Quick Start Guide** click on:
+
+        - **Set up Messaging Channels for Your App**
+        - Then on **Push Notifications**
+
+        ![One Signal messaging channels](https://storage.googleapis.com/adneta/expoship/docs/onesignal-1.png)
+    </Step>
+    <Step title="Set up your first channel">
+        - Click on **Google Android (FCM)**
+        
+        ![Set up Android channel](https://storage.googleapis.com/adneta/expoship/docs/onesignal-2.png)
+    </Step>
+    <Step title="Firebase console">
+        - Now you need to go to the [Firebase console](https://console.firebase.google.com/) and create a new project.
+    </Step>
+    <Step title="Firebase project settings">
+        - Now once you have created a new Firebase project go to **Project Settings**
+        
+        ![Firebase Project Settings](https://storage.googleapis.com/adneta/expoship/docs/onesignal-3.png)
+    </Step>
+    <Step title="Service account">
+        - Now go to **Service Accounts** section under **Project Settings**.
+        - Click on **Generate new private key** and download the JSON file.
+        
+        ![Firebase Service accounts](https://storage.googleapis.com/adneta/expoship/docs/onesignal-4.png)
+    </Step>
+    <Step title="Google Android Configuration">
+        - Now go back to OneSignal.
+        - Upload `.json` key.
+        - Click on **Save & Continue**
+        
+        ![OneSignal Android Configuration](https://storage.googleapis.com/adneta/expoship/docs/onesignal-5.png)
+    </Step>
+    <Step title="Target SDK">
+        - Click on **React Native / Expo**.
+        - Click on **Save & Continue**
+        
+        ![OneSignal Android Configuration](https://storage.googleapis.com/adneta/expoship/docs/onesignal-6.png)
+    </Step>
+    <Step title="App Id">
+        - Copy the **App Id**.
+        - Save the **App Id** in your `.env` file at `ONESIGNAL_APP_ID=`.
+        
+        ![OneSignal Android Configuration](https://storage.googleapis.com/adneta/expoship/docs/onesignal-7.png)
+    </Step>
+    <Step title="Apple set up">
+        Now you have to that same steps for iOS but instead of Firebase service key you will need a .p8 key from Apple Developer Portal, to do this:
+
+        - Go to this [page](https://developer.apple.com/account/resources/authkeys/add).
+        - Write a key name.
+        - Check **Apple Push Notifications service (APNs)**.
+        - Click **Register**.
+        - Download the key.
+        
+        ![OneSignal Android Configuration](https://storage.googleapis.com/adneta/expoship/docs/onesignal-8.png)
+    
+        <Warning>
+            Remember that the key can be downloaded only once so store it somewhere safe and don't lose it. And to register .p8 key at Apple Developer portal you have to be enrolled in Apple Developer program.
+        </Warning>
+    </Step>
+    <Step title="Run the app">
+        - Now you need to run `npx expo prebuild` in your terminal.
+        - Then run `npx expo run ios` to launch on iOS or `npx expo run android` to launch on Android.
+    </Step>
+</Steps>
+
+<Check>
+    Congratulations! You have successfully set up push notifications with One Signal.
+</Check>
+
+## Other tutorials
+<Card
+  title="Set up development environment"
+  icon="screwdriver-wrench"
+  href="https://docs.expoship.dev/javascript/development-environment"
+>
+  Set up your development environment
+</Card>
+<CardGroup cols={2}>
+  <Card
+    title="Set up Supabase"
+    icon="bolt"
+    href="https://docs.expoship.dev/javascript/supabase"
+  >
+    Set up user authentication with Supabase
+  </Card>
+  <Card
+    title="Set up Revenue Cat"
+    icon="money-bill"
+    href="https://docs.expoship.dev/javascript/revenuecat"
+  >
+    Set up in-app purchases with Revenue Cat
+  </Card>
+</CardGroup>

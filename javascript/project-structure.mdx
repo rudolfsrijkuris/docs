@@ -1,0 +1,76 @@
+---
+title: Project Structure
+description: Understand the project structure of codebase
+icon: 'folder-tree'
+---
+
+<Tip>
+    Spend time getting familiar with the project structure. It will help you move faster!
+</Tip>
+
+## Folder structure
+### 1. `/app`
+**All app screens** are under the `/app` folder, including:
+- `/app/index.js`: **Main entry point** for the app. It redirects to the `SplashScreen`.
+- `/app/_layout.js`: **Main layout** for the app. It wraps the app with `ThemeProvider` and `GestureHandlerView`.
+- `/app/Splashscreen`: All the **splash screen** related files are under this folder.
+- `/app/Onboarding`: All the **onboarding** related files are under this folder.
+- `/app/Auth`: All the **authentication** related files are under this folder.
+- `/app/Screens`: All the **component screens** from Home page are under this folder.
+- `/app/(tabs)`: All the **tab screens** are under this folder (`Home`, `Ads`, `Settings`).
+
+### 2. `/components`
+**Reusable components** are under the `/components` folder. These components are used across the app.
+
+<Tip>
+    Check out the components section for more information!
+</Tip>
+
+<Card
+    title="Components"
+    icon="paintbrush"
+    href="/javascript/components"
+>
+    Build beautiful mobile apps using Tailwind CSS.
+</Card>
+
+### 3. `/utility`
+**Utility functions** are under the `/utility` folder. These are various helper functions (`PushNotificationHandler.js`, `RevenueCatHandler.js`, `SupabaseHandler.js`, ...) used across the app.
+
+### 4. `/assets`
+**All assets** are under the `/assets` folder, including:
+- `/assets/animations`: **Lottie animations** used across the app.
+- `/assets/icons`: **App icons** used across the app.
+
+## Quicklinks
+
+<CardGroup cols={2}>
+  <Card
+    title="Set up development environment"
+    icon="screwdriver-wrench"
+    href="https://docs.expoship.dev/javascript/development-environment"
+  >
+    Set up your development environment
+  </Card>
+  <Card
+    title="Set up Supabase"
+    icon="bolt"
+    href="https://docs.expoship.dev/javascript/supabase"
+  >
+    Set up user authentication with Supabase
+  </Card>
+  <Card
+    title="Set up One Signal"
+    icon="bell"
+    href="https://docs.expoship.dev/javascript/onesignal"
+  >
+    Set up push notifications with One Signal
+  </Card>
+  <Card
+    title="Set up Revenue Cat"
+    icon="money-bill"
+    href="https://docs.expoship.dev/javascript/revenuecat"
+  >
+    Set up in-app purchases with Revenue Cat
+  </Card>
+</CardGroup>

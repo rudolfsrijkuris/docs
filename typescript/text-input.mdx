@@ -1,0 +1,51 @@
+---
+title: 'Text Input'
+description: 'Text input component'
+icon: 'input-text'
+---
+
+## Text Input Types
+There are three types of **Text Input** components in ExpoShip codebase
+
+- **Basic Input**
+- **Password Input**
+- **Search Input**
+
+<Tip>
+    You can find these text input's at `/components` folder.
+</Tip>
+
+## Usage
+You can use these text input's like this:
+
+```tsx TextInput.tsx
+import BasicInput from '@/components/BasicInput';
+import PasswordInput from '@/components/PasswordInput';
+import SearchInput from '@/components/SearchInput';
+ 
+const [basicInput, setBasicInput] = useState('');
+const [passwordInput, setPasswordInput] = useState('');
+const [searchInput, setSearchInput] = useState('');
+ 
+export default function textinput() {
+	return (
+		<BasicInput
+            value={basicInput}
+            onChangeText={setBasicInput}
+            placeholder="Basic Input"
+        />
+ 
+		<PasswordInput
+            value={passwordInput}
+            onChangeText={setPasswordInput}
+            placeholder="Password Input"
+        />
+ 
+		<SearchInput
+            value={searchInput}
+            onChangeText={setSearchInput}
+            placeholder="Search Input"
+        />
+	)
+}
+```

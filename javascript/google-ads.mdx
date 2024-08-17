@@ -1,0 +1,109 @@
+---
+title: 'Google Ads'
+description: 'Monetize your app with Google Ads'
+icon: 'google'
+---
+
+<Note>
+    You can find the Google Ads Mobile integration at `/utility/GoogleAds` and it is initialized at `/app/_layout.js` like this:
+</Note>
+
+```js /app/_layout.js
+useEffect(() => {
+	mobileAds().initialize()
+}, [])
+```
+
+## Ad Types
+<Tip>
+    ExpoShip Google Ads Mobile integration comes with 4 different ad components.
+</Tip>
+
+- Banner ad
+- Collapsible banner ad
+- Interstitial ad
+- Rewarded interstitial ad
+
+You can implement each of the component by importing it and calling it like this:
+
+```js example.js
+import { View, Text, SafeAreaView, ScrollView, TouchableOpacity } from 'react-native'
+import { React, useContext } from 'react'
+import { ThemeContext } from '../../utility/ThemeContext'
+import AdMobBanner from '../../utility/GoogleAds/AdMobBanner'
+import AdMobInterstitial from '../../utility/GoogleAds/AdMobInterstitial'
+import AdMobCollapsibleBanner from '../../utility/GoogleAds/AdMobCollapsibleBanner'
+import AdMobRewardedInterstitial from '../../utility/GoogleAds/AdMobRewardedInterstitial'
+ 
+export default function Home() {
+ 
+	const { theme } = useContext(ThemeContext)
+	const backgroundColor = theme === 'dark' ? 'bg-[--color-primary-default]' : 'bg-[--color-primary-light]';
+	const textColor = theme === 'dark' ? 'text-[--color-primary-light]' : 'text-[--color-primary-default]';
+ 
+	return  (
+		<SafeAreaView className={`flex-1 ${backgroundColor}`}>
+			<Text className={`font-bold text-2xl p-4 text-center mt-6 ${textColor}`}>Google Ads</Text>
+ 
+			<ScrollView className='m-4'>
+ 
+				<View className='mt-8'>
+					<AdMobBanner  />
+				</View>
+ 
+				<View className='mt-8'>
+					<AdMobInterstitial  />
+				</View>
+ 
+				<View className='mt-8'>
+					<AdMobCollapsibleBanner  />
+				</View>
+				
+				<View className='mt-8'>
+					<AdMobRewardedInterstitial  />
+				</View>
+				
+			</ScrollView>
+		</SafeAreaView>
+	)
+}
+```
+
+## Configuring Google Ads
+<Note>
+    You can follow this guide to setup Google Ads in your app - [https://docs.page/invertase/react-native-google-mobile-ads](https://docs.page/invertase/react-native-google-mobile-ads).
+</Note>
+
+<Tip>
+    There are two configuration files `/app.json` and `/.env.local`. In `/app.json` you need to add your `ios_app_id` and `android_app_id` like this:
+</Tip>
+
+```json app.json
+"react-native-google-mobile-ads": {
+	"ios_app_id": "ca-app-pub-3940256099942544~1458002511",
+	"android_app_id": "ca-app-pub-3940256099942544~3347511713"
+}
+```
+
+<Warning>
+    By default both app id's are Google's test id's
+</Warning>
+
+<Tip>
+    In `/.env.local` you need to ad your ad unit id's like this:
+</Tip>
+
+```env /.env.local
+BANNER_AD_UNIT_ID_IOS=ca-app-pub-3940256099942544/9214589741
+BANNER_AD_UNIT_ID_ANDROID=ca-app-pub-3940256099942544/9214589741
+ 
+INTERSTITIAL_AD_UNIT_ID_IOS=ca-app-pub-3940256099942544/1033173712
+INTERSTITIAL_AD_UNIT_ID_ANDROID=ca-app-pub-3940256099942544/1033173712
+ 
+REWARDED_INTERSTITIAL_AD_UNIT_ID_IOS=ca-app-pub-3940256099942544/5354046379
+REWARDED_INTERSTITIAL_AD_UNIT_ID_ANDROID=ca-app-pub-3940256099942544/5354046379
+```
+
+<Warning>
+    By default all of id's are Google's test id's
+</Warning>

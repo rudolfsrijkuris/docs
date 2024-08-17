@@ -1,0 +1,75 @@
+---
+title: 'Bottom Sheet'
+description: 'Bottom Sheet component'
+icon: 'sheet-plastic'
+---
+
+<Tip>
+    The `BottomSheet` component is used to show a bottom sheet. You can find it in the `/components` folder.
+</Tip>
+
+You can use the `BottomSheet` component in your code like this:
+
+```jsx BottomSheet.js
+import { View, Text, SafeAreaView, TouchableOpacity, Dimensions } from 'react-native';
+import React, { useRef, useContext, useCallback } from 'react';
+import { AntDesign } from '@expo/vector-icons';
+import { ThemeContext } from '../../../utility/ThemeContext';
+import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
+import PrimaryButton from '../../../components/PrimaryButton';
+ 
+export default function BottomSheetScreen() {
+  const dim = Dimensions.get('window').width;
+ 
+  const { theme } = useContext(ThemeContext);
+ 
+  const backgroundColor = theme === 'dark' ? 'bg-[--color-primary-default]' : 'bg-[--color-primary-light]';
+  const sheetBackgroundColor = theme === 'dark' ? 'bg-[#1F2E48]' : 'bg-[#DEE1E3]';
+  const textColor = theme === 'dark' ? 'text-[--color-primary-light]' : 'text-[--color-primary-default]';
+ 
+  const bottomSheetRef = useRef(null);
+ 
+  // callbacks
+  const handleSheetChanges = useCallback((index) => {
+    console.log('handleSheetChanges', index);
+  }, []);
+ 
+  const openBottomSheet = () => {
+    bottomSheetRef.current?.expand();
+  };
+ 
+  const closeBottomSheet = () => {
+    bottomSheetRef.current?.close();
+  };
+ 
+  return (
+    <SafeAreaView className={`flex-1 ${backgroundColor}`}>
+      <View className='px-4 py-4'>
+        <PrimaryButton title="Open Bottom Sheet" onPress={openBottomSheet} />
+      </View>
+ 
+      <View className='flex-1'>
+        <BottomSheet
+          ref={bottomSheetRef}
+          index={-1}
+          snapPoints={['25%', '50%', '75%']}
+          onChange={handleSheetChanges}
+          backgroundStyle={{ backgroundColor: theme === 'dark' ? '#1F2E48' : '#DEE1E3' }}
+          handleIndicatorStyle={{ backgroundColor: theme === 'dark' ? 'white' : 'black' }}
+        >
+          <BottomSheetView className={`flex-1 ${sheetBackgroundColor}`}>
+            <View className='w-full flex-row justify-end p-4'>
+              <TouchableOpacity onPress={closeBottomSheet}>
+                <AntDesign name="close" size={24} color={theme === 'dark' ? 'white' : "black"} />
+              </TouchableOpacity>
+            </View>
+            <View className='flex-1 items-center'>
+              <Text className={textColor}>Awesome 🎉</Text>
+            </View>
+          </BottomSheetView>
+        </BottomSheet>
+      </View>
+    </SafeAreaView>
+  );
+}
+```

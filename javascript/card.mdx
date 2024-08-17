@@ -1,0 +1,33 @@
+---
+title: 'Card'
+description: 'Card component'
+icon: 'cards-blank'
+---
+
+<Tip>
+    ExpoShip comes with Card component, which consists of image, title and description. You can find the Card component at `/components`.
+</Tip>
+
+You can use the Card component like this:
+
+```jsx Card.js
+import Card from '../../../components/Card';
+ 
+const handleCardPress = (title) => {
+	console.log(`Pressed: ${title}`);
+};
+ 
+export default function card() {
+	return (
+		<Card
+			imageSource={{ uri: 'https://cdn.pixabay.com/photo/2023/07/28/16/41/ai-generated-8155552_1280.jpg' }}
+			title="Card 1"
+			description="This is a description for Card 1."
+			backgroundColor={cardBackground}
+			titleColor={titleColor}
+			subtitleColor={subtitleColor}
+			onPress={() => handleCardPress('Card 1')}
+		/>
+	)
+}
+```

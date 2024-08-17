@@ -1,0 +1,95 @@
+---
+title: 'Development Environment'
+description: 'Setup your development environment for React Native app development'
+icon: 'screwdriver-wrench'
+---
+
+<Note>
+    Before you start, make sure your that your development environment is set up correctly.
+</Note>
+
+## Setup for iOS
+<Steps>
+    <Step title="Install Xcode">
+        Open up the Mac App Store, search for [Xcode](https://apps.apple.com/us/app/xcode/id497799835), and click **Install** it (or update if you have it already).
+
+        If you are unable to update, it is because your operating system might be out of date. You may run into issues further down the line if your Xcode version is out of date. For example, you may not be able to submit your app to the App Store.
+    </Step>
+    <Step title="Install Xcode Command Line Tools">
+        - Open Xcode.
+        - Choose **Settings...** from the Xcode menu (or press `cmd ⌘` + `,`).
+        - Go to the **Locations** tab.
+        - Install the tools by selecting the most recent version in the **Command Line Tools** dropdown.
+
+        ![Xcode setup](https://storage.googleapis.com/adneta/expoship/docs/xcode-setup.png)
+    </Step>
+    <Step title="Done">
+        <Check>
+            Congratulations! You have successfully set up your development environment for iOS.
+        </Check>
+    </Step>
+</Steps>
+
+## Setup for Android
+<Steps>
+    <Step title="Install Android Studio">
+        Download and install [Android Studio](https://developer.android.com/studio) from the official website.
+    </Step>
+    <Step title="Install Java JDK 17">
+        - Open terminal.
+        - Run this command `brew install openjdk@17`.
+        - Then run this command `brew link --force --overwrite openjdk@17`.
+    </Step>
+    <Step title="Android Studio's tools">
+        <Warning>
+            Follow this tutorial to set up Android Studio's tools: [https://docs.expo.dev/workflow/android-studio-emulator/](https://docs.expo.dev/workflow/android-studio-emulator/).
+        </Warning>
+    </Step>
+    <Step title="Done">
+        <Check>
+            Congratulations! You have successfully set up your development environment for Android.
+        </Check>
+    </Step>
+</Steps>
+
+## Setup for VS Code
+    <Note>
+        This step isn't mandatory, but it will make a much better development experience.
+    </Note>
+<Steps>
+    <Step title="Install extension">
+        - Open VS Code.
+        - Go to the **Extensions** tab.
+        - Search for **ES7+ React/Redux/React-Native snippets** and click **Install**.
+    </Step>
+    <Step title="Done">
+        <Check>
+            Congratulations! You have successfully set up your development environment for VS Code.
+        </Check>
+    </Step>
+</Steps>
+
+## Other tutorials
+<Card
+    title="Set up Supabase"
+    icon="bolt"
+    href="https://docs.expoship.dev/typescript/supabase"
+>
+    Set up user authentication with Supabase
+</Card>
+<CardGroup cols={2}>
+  <Card
+    title="Set up One Signal"
+    icon="bell"
+    href="https://docs.expoship.dev/typescript/onesignal"
+  >
+    Set up push notifications with One Signal
+  </Card>
+  <Card
+    title="Set up Revenue Cat"
+    icon="money-bill"
+    href="https://docs.expoship.dev/typescript/revenuecat"
+  >
+    Set up in-app purchases with Revenue Cat
+  </Card>
+</CardGroup>

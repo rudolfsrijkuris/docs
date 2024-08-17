@@ -1,0 +1,28 @@
+---
+title: 'Deployment'
+description: 'Deploy your app to the app store'
+icon: 'rocket'
+---
+
+<Steps>
+    <Step title="Commit to GitHub">
+        - First, commit your code to GitHub.
+
+        ```bash terminal
+        git add .
+        git commit -m "Time to ship"
+        git branch -M main
+        git remote add origin [YOUR_GITHUB_URL]
+        git push -u origin main
+        ```
+    </Step>
+    <Step title="Submit to App Store">
+        <Note>
+            To submit your app either on Apple App Store or Google Play Store follow this [https://docs.expo.dev/submit/introduction/](https://docs.expo.dev/submit/introduction/).
+        </Note>
+    </Step>
+</Steps>
+
+<Check>
+    Congrats on making it this far 🚀
+</Check>

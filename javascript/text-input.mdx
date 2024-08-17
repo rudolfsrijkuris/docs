@@ -1,0 +1,54 @@
+---
+title: 'Text Input'
+description: 'Text input component'
+icon: 'input-text'
+---
+
+## Text Input Types
+There are three types of **Text Input** components in ExpoShip codebase
+
+- **Basic Input**
+- **Password Input**
+- **Search Input**
+
+<Tip>
+    You can find these text input's at `/components` folder.
+</Tip>
+
+## Usage
+You can use these text input's like this:
+
+```jsx TextInput.js
+import BasicInput from  '../../../components/BasicInput';
+import PasswordInput from  '../../../components/PasswordInput';
+import SearchInput from  '../../../components/SearchInput';
+ 
+const [basicInput, setBasicInput] = useState("")
+const [passwordInput, setPasswordInput] = useState("")
+const [searchInput, setSearchInput] = useState("")
+ 
+export default function textinput() {
+	return (
+		<BasicInput
+			value={basicInput}
+			onChangeText={setBasicInput}
+			placeholder="Enter your name"
+			placeholderColor={theme === 'dark' ? 'text-[--color-primary-light]' : 'text-[--color-primary-default]'}
+		/>
+ 
+		<PasswordInput
+			value={PasswordInput}
+			onChangeText={setPasswordInput}
+			placeholder="Enter your password"
+			placeholderColor={theme === 'dark' ? 'text-[--color-primary-light]' : 'text-[--color-primary-default]'}
+		/>
+ 
+		<SearchInput
+			value={searchInput}
+			onChangeText={setSearchInput}
+			placeholder="Search..."
+			placeholderColor={theme === 'dark' ? 'text-[--color-primary-light]' : 'text-[--color-primary-default]'}
+		/>
+	)
+}
+```

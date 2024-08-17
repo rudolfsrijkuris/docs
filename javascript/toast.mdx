@@ -1,0 +1,27 @@
+---
+title: 'Toast'
+description: 'Toast component'
+icon: 'grid-2'
+---
+
+<Tip>
+    The `Toast` component is used to show a message to the user for a short period of time. You can find it in the `/components` folder.
+</Tip>
+
+You can use the `Toast` component in your code like this:
+
+```jsx Toast.js
+import Toast from '../../../components/Toast';
+ 
+const [toastVisible, setToastVisible] = useState(false);
+const showToast = () => {
+	setToastVisible(true);
+	setTimeout(() => setToastVisible(false), 5500);
+};
+ 
+export default function toast() {
+	return (
+		<Toast visible={toastVisible} message="Hello, this is a Toast message!" />
+	)
+}
+```

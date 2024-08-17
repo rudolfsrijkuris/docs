@@ -1,0 +1,27 @@
+---
+title: 'Switch'
+description: 'Switch component'
+icon: 'toggle-on'
+---
+
+<Tip>
+    The `Switch` component is used to toggle between two states. You can find this component in the `/components` folder.
+</Tip>
+
+You can use the `Switch` component in your code like this:
+
+```jsx Switch.js
+const [isEnabled, setIsEnabled] = useState(false);
+const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+ 
+export default function switch() {
+	return (
+		<Switch
+			trackColor={{ false: "#d1d5db", true: "#AAB2FF" }}
+			thumbColor={isEnabled ? "#AA8CFF" : "#f9fafb"}
+			onValueChange={toggleSwitch}
+			value={isEnabled}
+		/>
+	)
+}
+```

@@ -1,0 +1,448 @@
+---
+title: 'RevenueCat'
+description: 'Follow this tutorial to set up RevenueCat for in-app purchases'
+icon: 'money-bill'
+---
+
+<Note>
+    You can find the RevenueCat integration at `/providers/RevenueCatProvider.tsx` and it is initialized at `/app/(tabs)/_layout.tsx` like this:
+</Note>
+
+```tsx _layout.tsx
+import { View, Text, useColorScheme } from 'react-native';
+import React from 'react';
+import { Tabs } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { RevenueCatProvider } from '@/providers/RevenueCatProvider';
+
+const Layout = () => {
+  const colorScheme = useColorScheme(); // Get the current theme
+
+  // Define light and dark theme colors
+  const lightThemeColors = {
+    tabBarActiveTintColor: '#6829D5',
+    tabBarInactiveTintColor: '#A9A9A9',
+    tabBarBackgroundColor: '#FFFFFF',
+  };
+
+  const darkThemeColors = {
+    tabBarActiveTintColor: '#A59EC8',
+    tabBarInactiveTintColor: '#A9A9A9',
+    tabBarBackgroundColor: '#1F2732',
+  };
+
+  // Select colors based on the current theme
+  const themeColors = colorScheme === 'dark' ? darkThemeColors : lightThemeColors;
+
+  return (
+    <RevenueCatProvider>
+      <GestureHandlerRootView className='flex-1'>
+        <Tabs
+          screenOptions={{
+            headerShown: false,
+            tabBarActiveTintColor: themeColors.tabBarActiveTintColor,
+            tabBarInactiveTintColor: themeColors.tabBarInactiveTintColor,
+            tabBarStyle: {
+              backgroundColor: themeColors.tabBarBackgroundColor,
+            },
+          }}
+        >
+          <Tabs.Screen
+            name="index"
+            options={{
+              title: "CRUD",
+              tabBarIcon: ({ size, color }) => (
+                <Ionicons name='document-text' size={size} color={color} />
+              ),
+            }}
+          />
+
+          <Tabs.Screen
+            name="components"
+            options={{
+              title: "Components",
+              tabBarIcon: ({ size, color }) => (
+                <Ionicons name='browsers' size={size} color={color} />
+              ),
+            }}
+          />
+
+          <Tabs.Screen
+            name="settings"
+            options={{
+              title: "Settings",
+              tabBarIcon: ({ size, color }) => (
+                <Ionicons name='settings' size={size} color={color} />
+              ),
+            }}
+          />
+
+          <Tabs.Screen
+            name="paywall"
+            options={{
+              href: null,
+            }}
+          />
+        </Tabs>
+      </GestureHandlerRootView>
+    </RevenueCatProvider>
+  );
+}
+
+export default Layout;
+```
+
+## Setting up In-App Purchases and Subscriptions
+First of all you should create a RevenueCat account for free (e.g. using your Github account) and then create a new project in your account, under which you can add your iOS and Android apps and their respective bundle IDs.
+
+![Revenue Cat Apps](https://storage.googleapis.com/adneta/expoship/docs/revenuecat/revenue-cat-apps.png)
+
+To add IAP to your app you of course need a native app, so make sure you have set up an according app ID for iOS and Android before you continue.
+
+You will also need to to work on your app in [App Store Connect](https://appstoreconnect.apple.com/) for iOS as well as the [Google Developer Console](https://play.google.com/console) for Android where you can add In-App purchases and subscriptions, so make sure you got all the credentials for those accounts.
+
+We are not covering the full process of adding offerings and items to RevenueCat, but you can find a great guide in the [RevenueCat getting started guide](https://www.revenuecat.com/docs/getting-started).
+
+The steps are:
+- Create the products in App Store Connect and the Google Developer Console
+- Add the **products** to RevenueCat
+- Create **entitlements** in RevenueCat and add the products to them
+- Define **offerings** in RevenueCat and add the products to them
+
+## RevenueCat Provider
+We need to load our products and offerings from RevenueCat when the React Native app starts, so we have a `RevenueCatProvider` that will do this for us.
+
+We also want to be able to purchase items and restore purchases, so we have these methods as well to the provider as well.
+
+To make sure all of these functions are available to our React app, we create a `RevenueCatContext` and export it as a `useRevenueCat` hook to be used in our app.
+
+At this point you also need your RevenueCat API keys, which you can find in your RevenueCat project under **API Keys**. You will need to add them to the `.env` file.
+
+```env .env
+REVENUE_CAT_APPLE_KEY=your_apple_key
+REVENUE_CAT_GOOGLE_KEY=your_google_key
+```
+
+This is the structure of the `RevenueCatProvider`:
+
+```tsx RevenueCatProvider.tsx
+import { createContext, useContext, useEffect, useState } from 'react';
+import { Platform } from 'react-native';
+import Purchases, { LOG_LEVEL, PurchasesPackage } from 'react-native-purchases';
+import { CustomerInfo } from 'react-native-purchases';
+
+// Use your RevenueCat API keys
+const APIKeys = {
+	apple: process.env.REVENUE_CAT_APPLE_KEY,
+	google: process.env.REVENUE_CAT_GOOGLE_KEY
+};
+
+interface RevenueCatProps {
+	purchasePackage?: (pack: PurchasesPackage) => Promise<void>;
+	restorePermissions?: () => Promise<CustomerInfo>;
+	user: UserState;
+	packages: PurchasesPackage[];
+}
+
+export interface UserState {
+	pro: boolean;
+	subscriptionType: 'monthly' | 'annual' | null; // Added to track subscription type
+}
+
+const RevenueCatContext = createContext<RevenueCatProps | null>(null);
+
+// Export context for easy usage
+export const useRevenueCat = () => {
+	return useContext(RevenueCatContext) as RevenueCatProps;
+};
+
+// Provide RevenueCat functions to our app
+export const RevenueCatProvider = ({ children }: any) => {
+	const [user, setUser] = useState<UserState>({ pro: false, subscriptionType: null });
+	const [packages, setPackages] = useState<PurchasesPackage[]>([]);
+	const [isReady, setIsReady] = useState(false);
+
+	useEffect(() => {
+		const init = async () => {
+			if (Platform.OS === 'android') {
+				await Purchases.configure({ apiKey: APIKeys.google || 'undefined' });
+			} else {
+				await Purchases.configure({ apiKey: APIKeys.apple || 'undefined' });
+			}
+			setIsReady(true);
+
+			// Use more logging during debug if want!
+			Purchases.setLogLevel(LOG_LEVEL.DEBUG);
+
+			// Listen for customer updates
+			Purchases.addCustomerInfoUpdateListener(async (info) => {
+				updateCustomerInformation(info);
+			});
+
+			// Load all offerings and the user object with entitlements
+			await loadOfferings();
+		};
+		init();
+	}, []);
+
+	// Load all offerings a user can (currently) purchase
+	const loadOfferings = async () => {
+		const offerings = await Purchases.getOfferings();
+		if (offerings.current) {
+			setPackages(offerings.current.availablePackages);
+		}
+	};
+
+	// Update user state based on previous purchases
+	const updateCustomerInformation = async (customerInfo: CustomerInfo) => {
+		const newUser: UserState = { ...user, pro: false, subscriptionType: null };
+
+		if (customerInfo?.entitlements.active['PRO_MONTHLY']) {
+			newUser.pro = true;
+			newUser.subscriptionType = 'monthly';
+		}
+
+		if (customerInfo?.entitlements.active['PRO_ANNUAL']) {
+			newUser.pro = true;
+			newUser.subscriptionType = 'annual';
+		}
+
+		setUser(newUser);
+	};
+
+	// Purchase a package
+	const purchasePackage = async (pack: PurchasesPackage) => {
+		try {
+			const purchase = await Purchases.purchasePackage(pack);
+
+			if (purchase.customerInfo.entitlements.active['PRO_MONTHLY']) {
+				setUser({ ...user, pro: true, subscriptionType: 'monthly' });
+			} else if (purchase.customerInfo.entitlements.active['PRO_ANNUAL']) {
+				setUser({ ...user, pro: true, subscriptionType: 'annual' });
+			}
+
+		} catch (e: any) {
+			if (!e.userCancelled) {
+				alert(e);
+			}
+		}
+	};
+
+	// Restore previous purchases
+	const restorePermissions = async () => {
+		const customer = await Purchases.restorePurchases();
+		return customer;
+	};
+
+	const value = {
+		restorePermissions,
+		user,
+		packages,
+		purchasePackage
+	};
+
+	// Return empty fragment if provider is not ready (Purchase not yet initialised)
+	if (!isReady) return <></>;
+
+	return <RevenueCatContext.Provider value={value}>{children}</RevenueCatContext.Provider>;
+};
+```
+
+As you can see in the code we have 2 entitlements `PRO_MONTHLY` and `PRO_ANNUAL` set up. You can add more entitlements in RevenueCat and then add them to the `updateCustomerInformation` function.
+
+Also note that we have 2 subscription types `monthly` and `annual` in the `UserState` object.
+
+## Paywall
+This is the structure of the `Paywall` component:
+
+```tsx Paywall.tsx
+import React, { useState } from 'react';
+import { View, Text, TouchableOpacity, SafeAreaView, Image } from 'react-native';
+import { useRouter } from 'expo-router';
+import icon from '@/assets/images/icon.png';
+import { useRevenueCat } from '@/providers/RevenueCatProvider';
+import { PurchasesPackage } from 'react-native-purchases';
+
+const PaywallScreen: React.FC = () => {
+  const router = useRouter();
+  
+  // State for the selected subscription
+  const [selectedPlan, setSelectedPlan] = useState('Monthly');
+
+  // Mock Plan options (local data)
+  const plans = [
+    { id: 'Monthly', label: 'Full Access for just $4.99/mo' },
+    { id: 'Annual', label: 'Full Access for just $39.99/yr' },
+  ];
+
+  const { user, packages, purchasePackage, restorePermissions } = useRevenueCat();
+
+  // Function to handle the package purchase
+  const handleSubscribe = () => {
+    const selectedPackage = packages.find(pack => pack.identifier === selectedPlan);
+    if (selectedPackage) {
+      onPurchase(selectedPackage);
+    } else {
+      alert('Selected package not found');
+    }
+  };
+
+  const onPurchase = (pack: PurchasesPackage) => {
+    // Purchase the package
+    purchasePackage!(pack);
+  };
+
+  // Rendering the plan options dynamically (local data)
+  const renderPlanOptions = () => {
+    return plans.map(plan => (
+      <TouchableOpacity
+        key={plan.id}
+        onPress={() => setSelectedPlan(plan.id)}
+        className={`flex-row items-center justify-between p-4 rounded-lg border ${selectedPlan === plan.id ? 'border-[#6829D5] bg-[#A59EC8] text-[#212122]' : 'border-[#A59EC8]'}`}
+      >
+        <View className='flex-column'>
+          <Text className={`text-lg font-bold ${selectedPlan === plan.id ? 'text-[#212122]' : 'text-[#212122] dark:text-gray-200'}`}>{plan.id}</Text>
+          <Text className={`text-base ${selectedPlan === plan.id ? 'text-[#212122]' : 'text-[#212122] dark:text-gray-200'}`}>{plan.label}</Text>
+        </View>
+        {selectedPlan === plan.id && (
+          <View className='w-5 h-5 bg-[#6829D5] rounded-full' />
+        )}
+      </TouchableOpacity>
+    ));
+  };
+
+  // Rendering RevenueCat plans
+  const renderRevenueCatPlans = () => {
+    return packages.map(pack => (
+      <TouchableOpacity
+        key={pack.identifier}
+        onPress={() => setSelectedPlan(pack.identifier)}
+        className={`flex-row items-center justify-between p-4 rounded-lg border ${selectedPlan === pack.identifier ? 'border-[#6829D5] bg-[#A59EC8] text-[#212122]' : 'border-[#A59EC8]'}`}
+      >
+        <View className='flex-column'>
+          <Text className={`text-lg font-bold ${selectedPlan === pack.identifier ? 'text-[#212122]' : 'text-[#212122] dark:text-gray-200'}`}>{pack.product.title}</Text>
+          <Text className={`text-base ${selectedPlan === pack.identifier ? 'text-[#212122]' : 'text-[#212122] dark:text-gray-200'}`}>{pack.product.description}</Text>
+        </View>
+        {selectedPlan === pack.identifier && (
+          <View className='w-5 h-5 bg-[#6829D5] rounded-full' />
+        )}
+      </TouchableOpacity>
+    ));
+  };
+
+  return (
+    <SafeAreaView className='flex-1 dark:bg-[#2D3748]'>
+      {/* Header */}
+      <View className='flex-row justify-between items-center p-4'>
+        <TouchableOpacity onPress={() => router.back()}>
+          <Text className='text-[#6829D5] dark:text-[#A59EC8]'>Cancel</Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* Hero Section */}
+      <View className='flex-1 justify-center items-center'>
+        {/* Replace with your image or component */}
+        <Image source={icon} className='w-32 h-32 mx-auto' />
+        <Text className='mt-4 text-2xl font-semibold text-[#212122] dark:text-gray-200'>ExpoShip Premium</Text>
+      </View>
+
+      {/* Subscription Options (Render RevenueCat Packages) */}
+      <View className='px-6 space-y-4'>
+        {renderRevenueCatPlans()}
+      </View>
+
+      {/* Subscribe Button */}
+      <View className='px-6 mt-6'>
+        <TouchableOpacity 
+          className='bg-[#6829D5] dark:bg-[#A59EC8] py-4 rounded-lg'
+          onPress={handleSubscribe}
+        >
+          <Text className='text-center text-white dark:text-[#212122] font-bold text-lg'>Subscribe Now</Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* Footer */}
+      <View className='flex-row justify-center mt-6 mb-4'>
+        <TouchableOpacity className='mx-2' onPress={restorePermissions}>
+          <Text className='text-[#6829D5] dark:text-[#A59EC8]'>Restore purchases</Text>
+        </TouchableOpacity>
+        <Text className='text-gray-400'>•</Text>
+        <TouchableOpacity className='mx-2'>
+          <Text className='text-[#6829D5] dark:text-[#A59EC8]'>Terms</Text>
+        </TouchableOpacity>
+        <Text className='text-gray-400'>•</Text>
+        <TouchableOpacity className='mx-2'>
+          <Text className='text-[#6829D5] dark:text-[#A59EC8]'>Privacy policy</Text>
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
+  );
+};
+
+export default PaywallScreen;
+```
+
+If you have done everything correctly, you should now be able to see your subscription options in the Paywall screen and purchase them.
+
+To access the user subscription state in your app, you can use the `useRevenueCat` hook like this:
+
+```tsx example.tsx
+import { View, Text } from 'react-native';
+import React from 'react';
+import { UserState } from '@/providers/RevenueCatProvider'; 
+
+interface UserProps {
+	user: UserState;
+}
+
+const Page = ({ user }: UserProps) => {
+	return (
+		<View>
+			{user.pro ? (
+        <Text>You are a Pro user with a {user.subscriptionType} subscription</Text>
+      ) : (
+        <Text>You are not a Pro user</Text>
+      )}
+		</View>
+	);
+};
+
+export default Page;
+```
+
+<Tip>
+  This is an example of how you can use the `useRevenueCat` hook to access the user subscription state in your app.
+</Tip>
+
+## Conclusion
+If you have any problems with setting up RevenueCat, you can always refer to the [RevenueCat documentation](https://www.revenuecat.com/docs/getting-started) for more information.
+
+<Check>
+  Congrats - you have now set up RevenueCat for in-app purchases in your app!
+</Check>
+
+## Other tutorials
+<Card
+  title="Set up development environment"
+  icon="screwdriver-wrench"
+  href="https://docs.expoship.dev/typescript/development-environment"
+>
+  Set up your development environment
+</Card>
+<CardGroup cols={2}>
+  <Card
+    title="Set up Supabase"
+    icon="bolt"
+    href="https://docs.expoship.dev/typescript/supabase"
+  >
+    Set up user authentication with Supabase
+  </Card>
+  <Card
+    title="Set up One Signal"
+    icon="bell"
+    href="https://docs.expoship.dev/typescript/onesignal"
+  >
+    Set up push notifications with One Signal
+  </Card>
+</CardGroup>

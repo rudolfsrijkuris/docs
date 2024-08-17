@@ -1,0 +1,29 @@
+---
+title: 'Toast'
+description: 'Toast component'
+icon: 'grid-2'
+---
+
+<Tip>
+    The `Toast` component is used to show a message to the user for a short period of time. You can find it in the `/components` folder.
+</Tip>
+
+You can use the `Toast` component in your code like this:
+
+```tsx Toast.tsx
+import Toast from '@/components/Toast';
+ 
+const [toastVisible, setToastVisible] = useState(false);
+
+const showToast = () => {
+    setToastVisible(true);
+    setTimeout(() => setToastVisible(false), 5500);
+};
+ 
+export default function toast() {
+	return (
+		<Button title="Show Toast" onPress={showToast} />
+        <Toast visible={toastVisible} message="This is a toast message" />
+	)
+}
+```
