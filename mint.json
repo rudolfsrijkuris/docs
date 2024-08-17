@@ -17,8 +17,6 @@
   },
   "metadata": {
     "og:image": "/images/og-image.png",
-    "og:image:width": "1200",
-    "og:image:height": "630",
     "og:title": "ExpoShip - Build and deploy React Native apps in minutes",
     "og:description": "ExpoShip is a starter kit that allows you to build and deploy React Native apps in minutes. It comes with a lot of features and components that will help you to build your app faster.",
     "twitter:image": "/images/og-image.png",
